@@ -29,10 +29,10 @@ function getAdByID($ID, $link) {
     }  catch (Exception $e) {
     }
     if ($redis->exists($ID)) {
-            echo "in Redis ";
+//            echo "in Redis ";
             $inRedis = true;
         } else {
-            echo "not In Redis ";
+//            echo "not In Redis ";
             $inRedis = false;
     }
     //END Работа с Redis
