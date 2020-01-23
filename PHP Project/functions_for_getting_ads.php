@@ -1,4 +1,6 @@
 <?php
+use Redis;
+
 /*
   Даная функция проверяет валидность полученного ID от пользователя
  */
@@ -18,16 +20,39 @@ function validateID($id) {
  Функция получает id объявления и объект базы данных, возвращает все данные конкретного объявления
  */
 function getAdByID($ID, $link) {
-//    $sql  = 'SELECT id,header,text,images,price FROM `ads` WHERE id='.$ID;
+    //Работа с Redis, если не будет работать - закоментить
+    $inRedis = false;
+    $redis = new Redis();
+    try
+    {
+        $redis->connect('127.0.0.1', 6379);
+    }  catch (Exception $e) {
+    }
+    if ($redis->exists($ID)) {
+            echo "in Redis ";
+            $inRedis = true;
+        } else {
+            echo "not In Redis ";
+            $inRedis = false;
+    }
+    //END Работа с Redis
     $sql  = 'SELECT * FROM `ads` WHERE `id` = '.$ID;
-//    $result = mysqli_query($link, $sql);
-    $result = $link->query($sql);
+    //Если будут проблемы с Redis раскоментировать строчку ниже
+//    $result = $link->query($sql);
+    //И закоментировать строчку ниже
+    if ($inRedis) {$result = unserialize($redis->get($ID));} else {$result = $link->query($sql);}
+
     if ($result == false) {
 //        print("Произошла ошибка при выполнении запроса");
     } else {
-//        $row = mysqli_fetch_array($result);
-        $row = $result->fetch_assoc();
+        //Если будут проблемы с Redis - раскоментить строчку ниже
+//        $row = $result->fetch_assoc();
+        //И закоментить строчку ниже
+        if (!$inRedis) {$row = $result->fetch_assoc();} else {$row = $result;}
         if ($row["id"]) {
+            //Работа с Redis, если не будет работать - закоментить
+            $redis->append($row["id"], serialize($row));
+            //END Работа с Redis
             $answer = array('id' => $row["id"],
                 'head' => $row["header"],
                 'text' => $row["text"],
@@ -65,7 +90,6 @@ function getIDS($page, $sort, $link) {
             $sortBy = "date DESC";
     }
     $sql = 'SELECT id FROM `ads` ORDER BY '.$sortBy.' LIMIT '.$start.',10';
-//    $result = mysqli_query($link, $sql);
     $result = $link->query($sql);
     $returnIDS = array();
     while ($row = $result->fetch_assoc()) {

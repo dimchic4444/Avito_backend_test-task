@@ -92,3 +92,4 @@ function addAd($link,$id, $head, $text, $images, $price) {
         return "yes";
     }
 }
+
