@@ -16,8 +16,8 @@ require_once 'functions_for_add_ads.php';
 $answCode = 1; //По умолчанию код ответа - 1, что значит что все хорошо
 $adID = -1; // По умолчанию ID объявления не известен
 //$link == false
-if ($mysqli->connect_errno){
-//    print("Ошибка: Невозможно подключиться к MySQL " . mysqli_connect_error());
+if ($link->connect_errno){
+    print("Ошибка: Невозможно подключиться к MySQL " . mysqli_connect_error());
     $answCode = 2;
 } else {
     if ((validateFields($_POST["head"],$_POST["text"],$_POST["images"]) == "yes") && (antiSQLInjectionValidate($_POST["head"],$_POST["text"],$_POST["images"],$_POST["price"]) == "yes")) {
