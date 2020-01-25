@@ -7,12 +7,17 @@ sort - priceup, pricedown, dateup, datedown (По умолчанию datedown)
 require_once 'functions_for_getting_ads.php';
 require_once 'parameters_of_database.php';
 
-if (ctype_digit($_GET["page"])) {
+
+if ((isset($_GET["page"]))&&(ctype_digit($_GET["page"]))) {
     $needPage = (int)$_GET["page"];
 } else {
     $needPage = 1;
 }
-    $IDS = getIDS($needPage,$_GET["sort"],$link);
+    if (isset($_GET["sort"])) {
+        $IDS = getIDS($needPage,$_GET["sort"],$link);
+    } else {
+        $IDS = getIDS($needPage,"undefined",$link);
+    }
     $answ = array();
     for ($i=0;$i<count($IDS);$i++) {
         $oneAd = getAdByID($IDS[$i], $link);

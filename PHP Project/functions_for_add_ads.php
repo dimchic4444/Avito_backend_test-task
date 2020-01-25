@@ -38,7 +38,7 @@ function getUniqueID($link) {
 и no если хотя бы одно из полей не прошло валидацию
 */
 function validateFields($head, $text, $images) {
-    if ((($head)&&(strlen($head)<=200)) && (($text)&&(strlen($text)<=1000)) && (($images)&&(count(explode(" ", $images))<=3)) ) {
+    if ((($head) && (strlen($head) <= 200)) && (($text) && (strlen($text) <= 1000)) && (($images) && (count(explode(" ", $images)) <= 3))) {
         return "yes";
     } else {
         return "no";

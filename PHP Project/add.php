@@ -20,22 +20,27 @@ if ($link->connect_errno){
     print("Ошибка: Невозможно подключиться к MySQL " . mysqli_connect_error());
     $answCode = 2;
 } else {
-    if ((validateFields($_POST["head"],$_POST["text"],$_POST["images"]) == "yes") && (antiSQLInjectionValidate($_POST["head"],$_POST["text"],$_POST["images"],$_POST["price"]) == "yes")) {
-        $idForNewAd = getUniqueID($link);
-        $headForNewAd = $_POST["head"];
-        $textForNewAd = $_POST["text"];
-        $imagesForNewAd = $_POST["images"];
-        $priceForNewAd = (int)$_POST["price"];
-        if (addAd($link,$idForNewAd,$headForNewAd,$textForNewAd,$imagesForNewAd,$priceForNewAd) == "yes")
-        {
-            $answCode = 1;
-            $adID = $idForNewAd;
+    if ((isset($_GET["head"]))&&(isset($_GET["text"]))&&(isset($_GET["images"]))&&(isset($_GET["price"]))) {
+        if ((validateFields($_POST["head"], $_POST["text"], $_POST["images"]) == "yes") && (antiSQLInjectionValidate($_POST["head"], $_POST["text"], $_POST["images"], $_POST["price"]) == "yes")) {
+            $idForNewAd = getUniqueID($link);
+            $headForNewAd = $_POST["head"];
+            $textForNewAd = $_POST["text"];
+            $imagesForNewAd = $_POST["images"];
+            $priceForNewAd = (int)$_POST["price"];
+            if (addAd($link, $idForNewAd, $headForNewAd, $textForNewAd, $imagesForNewAd, $priceForNewAd) == "yes") {
+                $answCode = 1;
+                $adID = $idForNewAd;
+            } else {
+                $answCode = 4;
+            }
         } else {
-            $answCode = 4;
+            $answCode = 3;
         }
     } else {
         $answCode = 3;
     }
+
+
 }
         $answ = array('code'=> $answCode, 'ID'=>$adID);
         echo json_encode($answ, JSON_UNESCAPED_UNICODE); //возращаем JSON
