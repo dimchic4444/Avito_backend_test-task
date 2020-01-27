@@ -20,7 +20,7 @@ if ($link->connect_errno){
     print("Ошибка: Невозможно подключиться к MySQL " . mysqli_connect_error());
     $answCode = 2;
 } else {
-    if ((isset($_GET["head"]))&&(isset($_GET["text"]))&&(isset($_GET["images"]))&&(isset($_GET["price"]))) {
+    if ((isset($_POST["head"]))&&(isset($_POST["text"]))&&(isset($_POST["images"]))&&(isset($_POST["price"]))) {
         if ((validateFields($_POST["head"], $_POST["text"], $_POST["images"]) == "yes") && (antiSQLInjectionValidate($_POST["head"], $_POST["text"], $_POST["images"], $_POST["price"]) == "yes")) {
             $idForNewAd = getUniqueID($link);
             $headForNewAd = $_POST["head"];
